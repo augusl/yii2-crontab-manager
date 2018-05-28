@@ -1,2 +1,2 @@
-# yii-crontabManger
+# yii-crontab-manger
 通过这个包，您可以更好的管理您繁杂的定时任务，只需定义一个执行入口即可了
