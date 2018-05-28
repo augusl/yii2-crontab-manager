@@ -5,6 +5,7 @@
  * date:2018-5-28
  */
 
+
 namespace Crontab\models;
 
 /**
