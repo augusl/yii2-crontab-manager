@@ -285,5 +285,6 @@ class CronConfig extends \yii\db\ActiveRecord
 
     }
 
+
 }
 
