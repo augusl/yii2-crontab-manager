@@ -12,7 +12,7 @@ php多进程模块依赖pcntl扩展
 开始使用：
 
 1、安装
- senman/yii2-crontab-manager dev-master
+composer require senman/yii2-crontab-manager dev-master
  
  
 2、执行数据库导入
