@@ -69,4 +69,11 @@ class CronLog extends \yii\db\ActiveRecord
     {
         return CronLog::find()->select($fields)->where(["id" => $id])->one();
     }
+
+    public static function add($data)
+    {
+        $model = new CronLog();
+        $model->load($data, CronLog::className());
+        return $model->save();
+    }
 }

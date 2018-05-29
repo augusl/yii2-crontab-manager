@@ -96,11 +96,15 @@ class CronConfig extends \yii\db\ActiveRecord
     }
 
 
+
     /**
      * 执行任务入口
      */
     public static function run()
     {
+        if (!extension_loaded('pcntl')) {
+            die('no support pcntl extension');
+        }
         $cron_configs = CronConfig::getAllList(["status" => 0], ["cron_config_id"]);
         if ($cron_configs) {
             pcntl_signal(SIGCHLD, function ($signal) {
@@ -144,7 +148,7 @@ class CronConfig extends \yii\db\ActiveRecord
      * @param $cron_config_id
      * 待执行的任务
      */
-    protected static function job($cron_config_id)
+    public static function job($cron_config_id)
     {
         $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "start_time", "interval_time", "type", "path"]);
         if ($cron_config) {
@@ -168,16 +172,25 @@ class CronConfig extends \yii\db\ActiveRecord
                 //运行任务
                 echo \Yii::$app->runAction($cron_config['path']);
                 //写入日志
-                $cron_log_model = new CronLog();
-                $cron_log_model->create_time = date("Y-m-d H:i:s");
-                $cron_log_model->cron_config_id = $cron_config['cron_config_id'];
-                $cron_log_model->status = 0;
-                $cron_log_model->remark = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
-                if ($cron_log_model->save()) {
-                    echo "success \r\n";
-                } else {
-                    echo $cron_log_model->firstErrors;
-                }
+//                $cron_log_model = new CronLog();
+//                $cron_log_model->create_time = date("Y-m-d H:i:s");
+//                $cron_log_model->cron_config_id = $cron_config['cron_config_id'];
+//                $cron_log_model->status = 0;
+//                $cron_log_model->remark = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
+//                if ($cron_log_model->save()) {
+//                    echo "success \r\n";
+//                } else {
+//                    echo $cron_log_model->firstErrors;
+//                }
+
+                $log=[
+                    "create_time"=>date("Y-m-d H:i:s"),
+                    "cron_config_id"=> $cron_config['cron_config_id'],
+                    "status"=> 0,
+                    "remark"=>  "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]",
+                ];
+
+                CronLog::add($log);
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
                 $cron_log_model = new CronLog();
@@ -191,12 +204,16 @@ class CronConfig extends \yii\db\ActiveRecord
         }
     }
 
+
+
+
+
     /**
      * @param $cron_config_id
      * @return bool
      * 判断任务是具备执行条件
      */
-    private static function isCanRun($cron_config_id)
+    public static function isCanRun($cron_config_id)
     {
         try {
             $cron_config = self::getCrontabConfigById($cron_config_id, ["status", "start_time", "path"]);
@@ -228,7 +245,7 @@ class CronConfig extends \yii\db\ActiveRecord
      * @return bool
      * 判断是否到了间隔时间
      */
-    private static function isTimeArrive($cron_config_id)
+    public static function isTimeArrive($cron_config_id)
     {
         try {
             //获取定时配置信息
