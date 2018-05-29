@@ -82,9 +82,7 @@ php多进程模块依赖pcntl扩展
 
 在项目根目录的console\controllers目录创建CrontabController.php文件
 
-
 <?php
-
   namespace console\controllers;
   
   use Crontab\models\CronConfig;
@@ -114,10 +112,8 @@ php多进程模块依赖pcntl扩展
 
    执行命令：php yii crontab/crontab
    即可开始按照预设条件进行任务处理
-      
    
 5、建议将该命令加入到linux的定时任务任务中，根据需要设定运行间隔时间，例如1分钟跑一次
-
 
 6、如有任何疑问欢迎加入QQ群：338461207 进行交流
 
