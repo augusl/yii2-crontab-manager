@@ -1,7 +1,9 @@
 {
-  "name": "senman/yii-taskmanger",
+  "name": "senman/yii2-crontab-manager",
   "description": "更方便的管理您的定时任务，实时暂停、修改定时任务的时间等等",
   "license": "MIT",
+  "keywords": [],
+  "homepage": "https://www.monqin.com",
   "authors": [
     {
       "name": "senman",

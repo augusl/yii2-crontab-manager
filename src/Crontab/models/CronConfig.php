@@ -1,11 +1,7 @@
 <?php
 
-/**
- * author:senman
- * date:2018-5-28
- */
-
 namespace Crontab\models;
+
 
 /**
  * This is the model class for table "{{%cron_config}}".
