@@ -58,4 +58,15 @@ class CronLog extends \yii\db\ActiveRecord
     {
         return $this->hasOne(CronConfig::className(), ['cron_config_id' => 'cron_config_id']);
     }
+
+    /**
+     * @param $id
+     * @param string $fields
+     * @return mixed
+     */
+
+    public static function getCronLogById($id, $fields = "*")
+    {
+        return CronLog::find()->select($fields)->where(["id" => $id])->one();
+    }
 }

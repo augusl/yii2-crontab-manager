@@ -33,8 +33,8 @@ class CronConfig extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cron_config_id', 'name'], 'required'],
-            [['cron_config_id', 'interval_time', 'type'], 'integer'],
+            [['name', 'status'], 'required'],
+            [['status', 'interval_time', 'type', 'sort'], 'integer'],
             [['start_time', 'create_time'], 'safe'],
             [['name'], 'string', 'max' => 100],
             [['remark'], 'string', 'max' => 255],
@@ -49,7 +49,7 @@ class CronConfig extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'cron_config_id' => 'ID',
+            'cron_config_id' => 'Cron Config ID',
             'name' => 'Name',
             'remark' => 'Remark',
             'status' => 'Status',
@@ -58,10 +58,18 @@ class CronConfig extends \yii\db\ActiveRecord
             'type' => 'Type',
             'path' => 'Path',
             'module' => 'Module',
+            'sort' => 'Sort',
             'create_time' => 'Create Time',
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCronLogs()
+    {
+        return $this->hasMany(CronLog::className(), ['cron_config_id' => 'cron_config_id']);
+    }
 
     /**
      * @param array $condition
@@ -138,7 +146,7 @@ class CronConfig extends \yii\db\ActiveRecord
      */
     protected static function job($cron_config_id)
     {
-        $cron_config = CronConfig::find()->select(["cron_config_id", "name", "start_time", "interval_time", "type", "path"])->where(["cron_config_id" => $cron_config_id])->one();
+        $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "start_time", "interval_time", "type", "path"]);
         if ($cron_config) {
             //类型说明转换
             if ($cron_config['type'] == 0) {
@@ -191,7 +199,7 @@ class CronConfig extends \yii\db\ActiveRecord
     private static function isCanRun($cron_config_id)
     {
         try {
-            $cron_config = CronConfig::find()->select(["status", "start_time", "path"])->where(["cron_config_id" => $cron_config_id])->one();
+            $cron_config = self::getCrontabConfigById($cron_config_id, ["status", "start_time", "path"]);
             //1、判断任务执行路径是否为空
             if (trim($cron_config['path']) == "") {
                 return false;
@@ -224,10 +232,10 @@ class CronConfig extends \yii\db\ActiveRecord
     {
         try {
             //获取定时配置信息
-            $cron_config = CronConfig::find()->select(["cron_config_id", "type", "start_time", "interval_time", "path"])->where(["cron_config_id" => $cron_config_id])->one();
+            $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "type", "start_time", "interval_time", "path"]);
             $type = intval($cron_config['type']);
             // 0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
-            $cron_log = CronLog::find()->where(["cron_config_id" => $cron_config_id])->orderBy(["id" => SORT_DESC])->one();
+            $cron_log = $cron_config->getCronLogs()->orderBy(["id" => SORT_DESC])->one();
             if (!$cron_log) {
                 $log_time = $cron_config['start_time'];//开始执行的时间
             } else {
