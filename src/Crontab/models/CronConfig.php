@@ -96,7 +96,6 @@ class CronConfig extends \yii\db\ActiveRecord
     }
 
 
-
     /**
      * 执行任务入口
      */
@@ -125,7 +124,7 @@ class CronConfig extends \yii\db\ActiveRecord
                         // 返回值大于0，是父进程
                         echo "parent \t", date("H:i:s", time()), "\n";
                         //父进程会得到子进程号，所以这里是父进程执行的逻辑
-                        pcntl_wait($status, WNOHANG); //等待子进程中断，防止子进程成为僵尸进程。
+                        //    pcntl_wait($status, WNOHANG); //等待子进程中断，防止子进程成为僵尸进程。
                     } elseif ($pid == 0) {
                         // 返回值等于0，是子进程
                         self::job($v['cron_config_id']);
@@ -168,44 +167,25 @@ class CronConfig extends \yii\db\ActiveRecord
             } else {
                 $type_name = "未知";
             }
+
+            $log = [];
+            $log["create_time"] = date("Y-m-d H:i:s");
+            $log["cron_config_id"] = $cron_config['cron_config_id'];
             try {
                 //运行任务
-                echo \Yii::$app->runAction($cron_config['path']);
+                \Yii::$app->runAction($cron_config['path']);
                 //写入日志
-//                $cron_log_model = new CronLog();
-//                $cron_log_model->create_time = date("Y-m-d H:i:s");
-//                $cron_log_model->cron_config_id = $cron_config['cron_config_id'];
-//                $cron_log_model->status = 0;
-//                $cron_log_model->remark = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
-//                if ($cron_log_model->save()) {
-//                    echo "success \r\n";
-//                } else {
-//                    echo $cron_log_model->firstErrors;
-//                }
-
-                $log=[
-                    "create_time"=>date("Y-m-d H:i:s"),
-                    "cron_config_id"=> $cron_config['cron_config_id'],
-                    "status"=> 0,
-                    "remark"=>  "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]",
-                ];
-
-                CronLog::add($log);
+                $log["status"] = 0;
+                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
+                echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
-                $cron_log_model = new CronLog();
-                $cron_log_model->create_time = date("Y-m-d H:i:s");
-                $cron_log_model->cron_config_id = $cron_config['cron_config_id'];
-                $cron_log_model->status = 1;
-                $cron_log_model->remark = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 执行一次定时任务$cron_config[name] 出现异常：{$exception->getMessage()}";
-                $cron_log_model->save();
-                echo "fail \r\n";
+                $log["status"] = 1;
+                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 执行一次定时任务$cron_config[name] 出现异常：{$exception->getMessage()}";
             }
+            CronLog::add($log);
         }
     }
-
-
-
 
 
     /**
