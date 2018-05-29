@@ -29,33 +29,53 @@ php多进程模块依赖pcntl扩展
  
 3、添加任务
 
-
  name:任务名称
+ 
  remark：备注
+ 
  status:任务状态，0：正常运行，1：终止运行
+ 
  start_time:开始运行时间
+ 
  interval_time:间隔时间，具体单位取决于type的类型
+ 
  type:字段含义  0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
+ 
  path：执行路径
+ 
  module：所属模块
+ 
  sort：任务执行的优先顺序，数字越大，越先执行
+ 
  create_time：创建时间
 
 
 将任务添加到数据库
 
    $cron_config_model=new CronConfig();
+   
    $cron_config_model->name="短信批量发";
+   
    $cron_config_model->remark="这是短信批量发";
+   
    $cron_config_model->status="0";
+   
    $cron_config_model->start_time="2018-05-07 00:15:00";
+   
    $cron_config_model->interval_time="1";
+   
    $cron_config_model->type="1";
+   
    $cron_config_model->path="email/send";
+   
    $cron_config_model->module="email";
+   
    $cron_config_model->sort="100";
+   
    $cron_config_model->create_time="2018-05-28 11:53:19";
+   
    $cron_config_model->save();
+   
  
  
 3、编写脚本入口
@@ -64,31 +84,37 @@ php多进程模块依赖pcntl扩展
 
 
 <?php
+
   namespace console\controllers;
   
   use Crontab\models\CronConfig;
+  
   use yii\console\Controller;
   
   class CrontabController extends Controller
   {
+  
       /**
        * php yii crontab/crontab
+
        * 定时任务执行入口
        */
+       
       public function actionCrontab()
       {
+      
           CronConfig::run();
+          
       }
   
   
   }
   
-   
 4、执行任务
 
    执行命令：php yii crontab/crontab
    即可开始按照预设条件进行任务处理
-   
+      
    
 5、建议将该命令加入到linux的定时任务任务中，根据需要设定运行间隔时间，例如1分钟跑一次
 
