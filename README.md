@@ -34,11 +34,11 @@ php多进程模块依赖pcntl扩展
 开始使用：
 
 
- composer require senman/yii2-crontab-manager dev-master
+
  
-3、添加任务 Add tasks
+1、安装 Install
 
-
+ composer require senman/yii2-crontab-manager dev-master
  
  
  
