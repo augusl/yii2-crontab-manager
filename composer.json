@@ -1,6 +1,15 @@
 {
   "name": "senman/yii2-crontab-manager",
-  "description": "更方便的管理您的定时任务，实时暂停、启动、修改定时任务的执行时间等等",
+  "description": "
+  更方便的管理您的定时任务，实时暂停、启动、修改定时任务的执行时间等等 
+  
+ With this package, you can better manage your multifarious timing tasks, just define an execution entry that can be implemented more flexibly by manipulating database data for timing, opening, closing, setting up time, and so on.
+
+Description: the task manager implements the flexibility of multiple processes. After the task is opened, each task takes up a sub process and automatically releases after completion.
+
+Preparation: installation extension
+
+To implement the multiple processes of PHP, we need two extensions pcntl and POSIX, which can be added at compile time: - enable-pcntl, do not use - disable-pcntl, POSIX is the default installation. PHP multi process modules rely on pcntl extensions",
   "license": "MIT",
   "keywords": ["task","定时任务","job","crontab","manager"],
   "homepage": "https://www.monqin.com",
