@@ -243,6 +243,7 @@ class CronConfig extends \yii\db\ActiveRecord
             $current_time_tamp = strtotime($current_time);//当前时间戳
             $log_time_tamp = strtotime($log_time);//末次执行时间戳
 
+           // 0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
             //间隔类型判断,  //year（年），month（月），hour（小时）minute（分），second（秒）
             if (in_array($type, [3, 4, 5])) {
                 //判断是否到了启动时间
