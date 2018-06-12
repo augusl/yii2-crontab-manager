@@ -140,8 +140,18 @@ You can start handling tasks according to preset conditions
 5、建议将该命令加入到linux的定时任务任务中，根据需要设定运行间隔时间，例如1分钟跑一次
 it is recommended that the command be added to the Linux timed task, and set the running interval according to the requirement, such as running once in 1 minutes.
 
+
+6、若中途想修改执行的时间则需要执行下列两个步骤：
+
+1）修改该任务的cron_config表里的start_time；
+2）若是已经有执行记录，则修改该任务的最后一次执行记录cron_log表的update_time更新时间
+
 6、如有任何疑问欢迎加入QQ群：338461207 进行交流
 if you have any questions, welcome to join QQ group: 338461207
+
+
+
+
 
     
    
