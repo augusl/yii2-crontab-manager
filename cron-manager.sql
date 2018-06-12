@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `cron_config` (
   `module` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '所属模块',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`cron_config_id`),
   KEY `index_2` (`status`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='定时任务配置';
@@ -45,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `cron_log` (
 
 -- 正在导出表  cron_log 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `cron_log` DISABLE KEYS */;
-INSERT INTO `cron_log` (`id`, `cron_config_id`, `status`, `remark`, `create_time`) VALUES
-	(1, 1, 0, '正常执行', '2018-05-28 11:55:33');
+INSERT INTO `cron_log` (`id`, `cron_config_id`, `status`, `remark`, `create_time`, `update_time`) VALUES
+	(1, 1, 0, '正常执行', '2018-05-28 11:55:33', '2018-05-28 11:55:33');
 /*!40000 ALTER TABLE `cron_log` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
