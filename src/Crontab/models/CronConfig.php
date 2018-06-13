@@ -16,6 +16,8 @@ namespace Crontab\models;
  * @property string $path
  * @property string $module
  * @property string $create_time
+ * @property string $last_run_time
+ * @property string $update_time
  */
 class CronConfig extends \yii\db\ActiveRecord
 {
@@ -149,7 +151,7 @@ class CronConfig extends \yii\db\ActiveRecord
      */
     public static function job($cron_config_id)
     {
-        $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "start_time", "interval_time", "type", "path"]);
+        $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "start_time", "interval_time", "type", "path", "last_run_time"]);
         if ($cron_config) {
             //类型说明转换
             if ($cron_config['type'] == 0) {
@@ -169,7 +171,6 @@ class CronConfig extends \yii\db\ActiveRecord
             }
 
             $log = [];
-            $log["create_time"] = date("Y-m-d H:i:s");
             $log["cron_config_id"] = $cron_config['cron_config_id'];
             try {
                 //运行任务
@@ -177,6 +178,9 @@ class CronConfig extends \yii\db\ActiveRecord
                 //写入日志
                 $log["status"] = 0;
                 $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
+
+                //更新末次执行时间
+                $cron_config->last_run_time = date("Y-m-d H:i:s");
                 echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
@@ -236,14 +240,14 @@ class CronConfig extends \yii\db\ActiveRecord
             if (!$cron_log) {//没有日志记录
                 $log_time = $cron_config['start_time'];//开始执行的时间
             } else {
-                $log_time = $cron_log['update_time'];//末次执行时间，取更新的时间
+                $log_time = $cron_config['last_run_time'];//末次执行时间，取更新的时间
             }
             $interval_time = intval($cron_config['interval_time']);//间隔时间
             $current_time = date("Y-m-d H:i:s");//当前时间
             $current_time_tamp = strtotime($current_time);//当前时间戳
             $log_time_tamp = strtotime($log_time);//末次执行时间戳
 
-           // 0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
+            // 0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
             //间隔类型判断,  //year（年），month（月），hour（小时）minute（分），second（秒）
             if (in_array($type, [3, 4, 5])) {
                 //判断是否到了启动时间

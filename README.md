@@ -141,12 +141,11 @@ You can start handling tasks according to preset conditions
 it is recommended that the command be added to the Linux timed task, and set the running interval according to the requirement, such as running once in 1 minutes.
 
 
-6、若中途想修改执行的时间则需要执行下列两个步骤：
+6、若中途想修改执行的时间则需要执行下列步骤：
 
-1）修改该任务的cron_config表里的start_time；
-2）若是已经有执行记录，则修改该任务的最后一次执行记录cron_log表的update_time更新时间
+1）修改该任务的cron_config表里的last_run_time；
 
-6、如有任何疑问欢迎加入QQ群：338461207 进行交流
+7、如有任何疑问欢迎加入QQ群：338461207 进行交流
 if you have any questions, welcome to join QQ group: 338461207
 
 
