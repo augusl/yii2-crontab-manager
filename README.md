@@ -45,7 +45,7 @@ php多进程模块依赖pcntl扩展
 2、执行数据库导入
 
 
-将vender/yii2-crontab-manager/目录下的  cron-manager.sql导入到数据库
+将vender/yii2-crontab-manager/目录下的  cron-manager.sql导入到数据库或者执行 yii migrate 命令导入数据库
  
  
  

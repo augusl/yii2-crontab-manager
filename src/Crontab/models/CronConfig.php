@@ -178,15 +178,16 @@ class CronConfig extends \yii\db\ActiveRecord
                 //写入日志
                 $log["status"] = 0;
                 $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
-
-                //更新末次执行时间
-                $cron_config->last_run_time = date("Y-m-d H:i:s");
                 echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
                 $log["status"] = 1;
                 $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 执行一次定时任务$cron_config[name] 出现异常：{$exception->getMessage()}";
             }
+
+            //更新末次执行时间
+            $cron_config->last_run_time = date("Y-m-d H:i:s");
+            $cron_config->save();
             CronLog::add($log);
         }
     }
