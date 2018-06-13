@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `cron_log` (
 
 -- 正在导出表  cron_log 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `cron_log` DISABLE KEYS */;
-INSERT INTO `cron_log` (`id`, `cron_config_id`, `status`, `remark`, `create_time`) VALUES
-	(1, 1, 0, '正常执行', '2018-05-28 11:55:33', '2018-05-28 11:55:33');
+INSERT INTO `cron_log` (`id`, `cron_config_id`, `status`, `remark`,`create_time`) VALUES
+	(1, 1, 0, '正常执行', '2018-05-28 11:55:33');
 /*!40000 ALTER TABLE `cron_log` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

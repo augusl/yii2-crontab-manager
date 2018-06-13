@@ -10,7 +10,6 @@ namespace Crontab\models;
  * @property integer $status
  * @property string $remark
  * @property string $create_time
- * @property string $update_time
  *
  * @property CronConfig $cronConfig
  */
@@ -71,12 +70,18 @@ class CronLog extends \yii\db\ActiveRecord
         return CronLog::find()->select($fields)->where(["id" => $id])->one();
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     * 增加记录
+     */
     public static function add($data)
     {
         $model = new CronLog();
         $model->cron_config_id = $data['cron_config_id'];
         $model->status = $data['status'];
         $model->remark = $data['remark'];
+        $model->create_time =date("Y-m-d H:i:s");
         return $model->save();
     }
 }
