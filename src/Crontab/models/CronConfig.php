@@ -151,7 +151,7 @@ class CronConfig extends \yii\db\ActiveRecord
      */
     public static function job($cron_config_id)
     {
-        $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "start_time", "interval_time", "type", "path", "last_run_time"]);
+        $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "status", "start_time", "interval_time", "type", "path", "last_run_time"]);
         if ($cron_config) {
             //类型说明转换
             if ($cron_config['type'] == 0) {
