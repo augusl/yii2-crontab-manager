@@ -83,6 +83,7 @@ Import cron-manager.sql from vender/yii2-crontab-manager/ directory into databas
  
 将任务添加到数据库 Add the task to the database
 
+```
    $cron_config_model=new CronConfig();
    
    $cron_config_model->name="短信批量发";
@@ -106,12 +107,15 @@ Import cron-manager.sql from vender/yii2-crontab-manager/ directory into databas
    $cron_config_model->create_time="2018-05-28 11:53:19";
    
    $cron_config_model->save();
+   
+   ```
  
 3、编写脚本入口 Write the entry of the script
 
 在项目根目录的console\controllers目录创建CrontabController.php文件，如下：
 Create the CrontabController.php file in the console\controllers directory of the project root directory, as follows:
 
+```
 namespace console\controllers;
 
 use Crontab\models\CronConfig;
@@ -127,6 +131,7 @@ class CrontabController extends Controller{
         }
    } 
  
+ ```
  
 4、执行任务 Carry out the task
 
