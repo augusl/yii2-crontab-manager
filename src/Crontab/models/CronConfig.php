@@ -241,7 +241,13 @@ class CronConfig extends \yii\db\ActiveRecord
             if (!$cron_log) {//没有日志记录
                 $log_time = $cron_config['start_time'];//开始执行的时间
             } else {
-                $log_time = $cron_config['last_run_time'];//末次执行时间，取更新的时间
+
+                //若是最后执行实际为空则以启动时间为准
+                if (empty($cron_config['last_run_time'])) {
+                    $log_time = $cron_config['start_time'];//开始执行的时间
+                } else {
+                    $log_time = $cron_config['last_run_time'];//末次执行时间，取更新的时间
+                }
             }
             $interval_time = intval($cron_config['interval_time']);//间隔时间
             $current_time = date("Y-m-d H:i:s");//当前时间
