@@ -234,21 +234,17 @@ class CronConfig extends \yii\db\ActiveRecord
     {
         try {
             //获取定时配置信息
-            $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "type", "start_time", "interval_time", "path"]);
+            $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "type", "start_time", "interval_time", "last_run_time", "status", "path"]);
             $type = intval($cron_config['type']);
             // 0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月
-            $cron_log = $cron_config->getCronLogs()->orderBy(["id" => SORT_DESC])->one();
-            if (!$cron_log) {//没有日志记录
+
+            //若是最后执行实际为空则以启动时间为准
+            if (empty($cron_config['last_run_time'])) {
                 $log_time = $cron_config['start_time'];//开始执行的时间
             } else {
-
-                //若是最后执行实际为空则以启动时间为准
-                if (empty($cron_config['last_run_time'])) {
-                    $log_time = $cron_config['start_time'];//开始执行的时间
-                } else {
-                    $log_time = $cron_config['last_run_time'];//末次执行时间，取更新的时间
-                }
+                $log_time = $cron_config['last_run_time'];//末次执行时间，取更新的时间
             }
+
             $interval_time = intval($cron_config['interval_time']);//间隔时间
             $current_time = date("Y-m-d H:i:s");//当前时间
             $current_time_tamp = strtotime($current_time);//当前时间戳
