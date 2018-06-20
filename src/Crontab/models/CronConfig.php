@@ -135,13 +135,16 @@ class CronConfig extends \yii\db\ActiveRecord
 
                 }
             }
+
+
+            \Yii::$app->db->close();// solve 主进程 MySQL server has gone
+            while (pcntl_waitpid(0, $status) != -1) {
+                $status = pcntl_wexitstatus($status);
+                echo "Child $status completed\n";
+                exit;
+            }
         }
-        \Yii::$app->db->close();// solve 主进程 MySQL server has gone
-        while (pcntl_waitpid(0, $status) != -1) {
-            $status = pcntl_wexitstatus($status);
-            echo "Child $status completed\n";
-            exit;
-        }
+
         exit;
     }
 
@@ -203,7 +206,7 @@ class CronConfig extends \yii\db\ActiveRecord
         try {
             $cron_config = self::getCrontabConfigById($cron_config_id, ["status", "start_time", "path"]);
             //1、判断任务执行路径是否为空
-            if (trim($cron_config['path']) == "") {
+            if (empty(trim($cron_config['path']))) {
                 return false;
             }
             //2、判断是否已经开启
