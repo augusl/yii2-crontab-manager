@@ -254,7 +254,7 @@ class CronConfig extends \yii\db\ActiveRecord
             //间隔类型判断,  //year（年），month（月），hour（小时）minute（分），second（秒）
             if (in_array($type, [3, 4, 5])) {
                 //判断是否到了启动时间
-                if (intval(date("H")) == intval(date("H", strtotime($cron_config['start_time'])))) {
+                if (intval(date("H")) == intval(date("H", $log_time_tamp))) {
                     if ($type == 5) {
                         //月，判断上次执行的月份+间隔的月份是否等于本月本日本时
                         if (date("Ymd") >= date("Ymd", strtotime("+$interval_time month", $log_time_tamp))) {
