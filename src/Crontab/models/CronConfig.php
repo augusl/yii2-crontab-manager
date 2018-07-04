@@ -154,6 +154,7 @@ class CronConfig extends \yii\db\ActiveRecord
      */
     public static function job($cron_config_id)
     {
+        $begin_time = microtime(true);
         $cron_config = self::getCrontabConfigById($cron_config_id, ["cron_config_id", "name", "status", "start_time", "interval_time", "type", "path", "last_run_time"]);
         if ($cron_config) {
             //类型说明转换
@@ -178,9 +179,10 @@ class CronConfig extends \yii\db\ActiveRecord
             try {
                 //运行任务
                 \Yii::$app->runAction($cron_config['path']);
+
                 //写入日志
                 $log["status"] = 0;
-                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]";
+                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]，共耗时：" . round(microtime(true) - $begin_time, 5) . "s";
                 echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
