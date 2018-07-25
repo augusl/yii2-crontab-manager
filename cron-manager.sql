@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `cron_config` (
   `cron_config_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '任务名称',
   `remark` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '任务备注',
-  `status` tinyint(4) NOT NULL COMMENT '任务状态，0：正常运行，1：终止运行',
+  `status` tinyint(4) NOT NULL COMMENT '任务状态，1：正常运行，0：终止运行',
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始运行时间',
   `interval_time` int(11) NOT NULL DEFAULT '1' COMMENT '间隔时间',
   `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '0：间隔时间单位为秒，1：间隔时间单位为分钟，2：间隔时间单位为小时，3：间隔时间单位为天，4：间隔时间单位为周，5：间隔时间单位为月',
@@ -37,7 +37,7 @@ INSERT INTO `cron_config` (`cron_config_id`, `name`, `remark`, `status`, `start_
 CREATE TABLE IF NOT EXISTS `cron_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `cron_config_id` int(11) NOT NULL COMMENT '定时任务配置ID',
-  `status` tinyint(4) NOT NULL COMMENT '执行结果，0：正常执行，1：异常退出',
+  `status` tinyint(4) NOT NULL COMMENT '执行结果，1：正常执行，0：异常退出',
   `remark` varchar(555) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '备注原因',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '执行时间',
   PRIMARY KEY (`id`),
