@@ -63,7 +63,7 @@ Import cron-manager.sql from vender/yii2-crontab-manager/ directory into databas
  
  remark：备注
  
- status:任务状态，0：正常运行，1：终止运行  Task state, 0: normal operation, 1: terminate operation
+ status:任务状态，1：正常运行，0：终止运行  Task state, 1: normal operation, 0: terminate operation
  
  start_time:开始运行时间 Start running time
  

@@ -22,8 +22,8 @@ namespace Crontab\models;
 class CronConfig extends \yii\db\ActiveRecord
 {
 
-    public $status_invalid = 1;//无效
-    public $status_effective = 0;//有效
+    public $status_invalid = 0;//无效
+    public $status_effective = 1;//有效
 
     /**
      * @inheritdoc
