@@ -21,6 +21,10 @@ namespace Crontab\models;
  */
 class CronConfig extends \yii\db\ActiveRecord
 {
+
+    public $status_invalid = 1;//无效
+    public $status_effective = 0;//有效
+
     /**
      * @inheritdoc
      */
@@ -28,6 +32,7 @@ class CronConfig extends \yii\db\ActiveRecord
     {
         return '{{%cron_config}}';
     }
+
 
     /**
      * @inheritdoc
@@ -66,6 +71,27 @@ class CronConfig extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return int
+     * 无效
+     */
+    public static function getInvalidVal()
+    {
+        $cron = new CronConfig();
+        return $cron->status_invalid;
+
+    }
+
+    /**
+     * @return int
+     * 有效
+     */
+    public static function getEffectiveVal()
+    {
+        $cron = new CronConfig();
+        return $cron->status_invalid;
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getCronLogs()
@@ -79,7 +105,7 @@ class CronConfig extends \yii\db\ActiveRecord
      * @return array|\yii\db\ActiveRecord[]
      * 根据条件获取任务列表
      */
-    public static function getAllList($condition = ["status" => 0], $fields = "*")
+    public static function getAllList($condition = ["status" => self::getEffectiveVal()], $fields = "*")
     {
 
         return CronConfig::find()->where($condition)->orderBy(["sort" => SORT_DESC, "start_time" => SORT_ASC, "cron_config_id" => SORT_ASC])->select($fields)->asArray()->all();
@@ -106,7 +132,7 @@ class CronConfig extends \yii\db\ActiveRecord
         if (!extension_loaded('pcntl')) {
             die('no support pcntl extension');
         }
-        $cron_configs = CronConfig::getAllList(["status" => 0], ["cron_config_id"]);
+        $cron_configs = CronConfig::getAllList(["status" => self::getEffectiveVal()], ["cron_config_id"]);
         if ($cron_configs) {
             pcntl_signal(SIGCHLD, function ($signal) {
                 echo "signel $signal received\n";
@@ -183,12 +209,12 @@ class CronConfig extends \yii\db\ActiveRecord
                     $res = @json_encode($res);
                 }
                 //写入日志
-                $log["status"] = 0;
+                $log["status"] = self::getEffectiveVal();
                 $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]，共耗时：" . round(microtime(true) - $begin_time, 5) . "s，" . "任务返回信息：" . $res;
                 echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
-                $log["status"] = 1;
+                $log["status"] = self::getInvalidVal();
                 $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 执行一次定时任务$cron_config[name] 出现异常：{$exception->getMessage()}";
             }
 
@@ -214,7 +240,7 @@ class CronConfig extends \yii\db\ActiveRecord
                 return false;
             }
             //2、判断是否已经开启
-            if (!($cron_config['status'] == 0)) {
+            if (!($cron_config['status'] == self::getEffectiveVal())) {
                 return false;
             }
             //3、判断是否已经到了开启的时间
