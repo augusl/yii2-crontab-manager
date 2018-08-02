@@ -88,7 +88,7 @@ class CronConfig extends \yii\db\ActiveRecord
     public static function getEffectiveVal()
     {
         $cron = new CronConfig();
-        return $cron->status_invalid;
+        return $cron->status_effective;
     }
 
     /**
@@ -105,7 +105,7 @@ class CronConfig extends \yii\db\ActiveRecord
      * @return array|\yii\db\ActiveRecord[]
      * 根据条件获取任务列表
      */
-    public static function getAllList($condition = ["status" => self::getEffectiveVal()], $fields = "*")
+    public static function getAllList($condition = null, $fields = "*")
     {
 
         return CronConfig::find()->where($condition)->orderBy(["sort" => SORT_DESC, "start_time" => SORT_ASC, "cron_config_id" => SORT_ASC])->select($fields)->asArray()->all();
@@ -132,6 +132,7 @@ class CronConfig extends \yii\db\ActiveRecord
         if (!extension_loaded('pcntl')) {
             die('no support pcntl extension');
         }
+
         $cron_configs = CronConfig::getAllList(["status" => self::getEffectiveVal()], ["cron_config_id"]);
         if ($cron_configs) {
             pcntl_signal(SIGCHLD, function ($signal) {
@@ -140,10 +141,11 @@ class CronConfig extends \yii\db\ActiveRecord
                     echo "\t child end pid $pid , status $status\n";
                 }
             });
+
             foreach ($cron_configs as $k => $v) {
                 if (self::isCanRun($v['cron_config_id'])) {
                     \Yii::$app->db->close();//关闭链接
-                    // 创建子进程
+                    //  创建子进程
                     $pid = pcntl_fork();
                     if ($pid == -1) {
                         // 返回值为-1，创建失败
