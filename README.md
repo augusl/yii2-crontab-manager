@@ -90,7 +90,7 @@ Import cron-manager.sql from vender/yii2-crontab-manager/ directory into databas
    
    $cron_config_model->remark="这是短信批量发";
    
-   $cron_config_model->status="0";
+   $cron_config_model->status=1;
    
    $cron_config_model->start_time="2018-05-07 00:15:00";
    
