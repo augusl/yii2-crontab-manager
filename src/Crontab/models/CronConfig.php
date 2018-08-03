@@ -206,13 +206,10 @@ class CronConfig extends \yii\db\ActiveRecord
             $log["cron_config_id"] = $cron_config['cron_config_id'];
             try {
                 //运行任务
-                $res = \Yii::$app->runAction($cron_config['path']);
-                if (!is_string($res)) {
-                    $res = @json_encode($res);
-                }
+                \Yii::$app->runAction($cron_config['path']);
                 //写入日志
                 $log["status"] = self::getEffectiveVal();
-                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]，共耗时：" . round(microtime(true) - $begin_time, 5) . "s，" . "任务返回信息：" . $res;
+                $log["remark"] = "于$cron_config[start_time] 开始按照每间隔$cron_config[interval_time] $type_name 成功执行一次定时$cron_config[name]，共耗时：" . round(microtime(true) - $begin_time, 5) . "s，";
                 echo "success";
             } catch (\Exception $exception) {
                 echo "异常:" . $exception->getMessage();
