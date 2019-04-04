@@ -30,7 +30,7 @@ class CronConfig extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%cron_config}}';
+        return 'cron_config';
     }
 
 

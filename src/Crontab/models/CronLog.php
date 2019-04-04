@@ -20,7 +20,7 @@ class CronLog extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%cron_log}}';
+        return 'cron_log';
     }
 
     /**
