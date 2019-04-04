@@ -150,8 +150,6 @@ it is recommended that the command be added to the Linux timed task, and set the
 
 1）修改该任务的cron_config表里的last_run_time；
 
-7、如有任何疑问欢迎加入QQ群：338461207 进行交流
-if you have any questions, welcome to join QQ group: 338461207
 
 
 
